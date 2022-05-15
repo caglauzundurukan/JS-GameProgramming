@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta name="author" content="Cagla Uzundurukan 19360859041" />
+	<title>Sweet Cat</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+		}
+
+		body {
+			background: #000;
+		}
+
+		.game-canvas {
+			width: 1000px;
+			height: 1000px;
+
+		}
+
+		#game {
+			width: 800px;
+			height: 800px;
+			border: 1px solid #000;
+			background: #fff;
+			margin: 100px auto;
+			position: relative;
+			overflow: hidden;
+		}
+
+		#cat {
+			position: absolute;
+			width: 39px;
+			height: 42px;
+			background: url(cat_2.png);
+			bottom: 0;
+		}
+
+		.cat-animate {
+			animation: cat .5s linear;
+		}
+
+		#barrier {
+			position: absolute;
+			width: 23px;
+			height: 46px;
+			background: url(barrier.png);
+			bottom: 0;
+			left: 775px;
+		}
+
+		.barrier-animate {
+			animation: barrier 2s linear infinite;
+		}
+
+		@keyframes barrier {
+			0% {
+				left: 775px;
+			}
+
+			100% {
+				left: -40px
+			}
+		}
+
+		@keyframes cat {
+			0% {
+				bottom: 0px;
+			}
+
+			25% {
+				bottom: 70px;
+			}
+
+			75% {
+				bottom: 70px;
+			}
+
+			100% {
+				bottom: 0px;
+			}
+		}
+	</style>
+</head>
+
+<body>
+	<div id="game_div" align="center" style="display: block;">
+		<canvas id="canvas_id" class="game-canvas"></canvas>
+	</div>
+
+	<script>
+		//canvas setup
+		var c = document.getElementById("canvas_id");
+		var ctx = c.getContext("2d");
+		ctx.imageSmoothingEnabled = false;
+		c.width = 800; //window.innerWidth;
+		c.height = 800; window.innerHeight;
+		// document.body.appendChild(c);
+
+		//load images
+
+		var gameSpeed = 3;
+		//var cWidth = 1800;
+		//var cHeight = 1800;
+
+		var cHeight = c.height;
+		var cWidth = c.width;
+		ctx.canvas.width = cWidth;
+		ctx.canvas.height = cHeight;
+		ctx.font = "20px Georgia";
+
+
+		var iW = 0;
+		var iH = 0;
+		var bgPos = 0;
+		var cat = new Image();
+		cat.src = "cat_2.png";
+		var catDims = [120, 120];
+
+		var ball = new Image();
+		ball.src = "ball.png";
+		var ballDims = [40, 40];
+
+
+		var background = new Image();
+		background.src = "background2.png";
+		background.onload = () => {
+			iW = background.naturalWidth;
+			iH = background.naturalHeight;
+			console.log("Hello", iW);
+			drawFrame();
+		}
+
+		var isJumping = false;
+		var jumpStage = 0;
+		var maxJump = 400;
+		var jumpSpeed = 4;
+
+		var ballPos = 0;
+		var score = 0;
+
+		function drawFrame() {
+			ctx.clearRect(0, 0, cWidth, cHeight);
+			if (bgPos >= cWidth) {
+				bgPos = 0;
+			}
+
+			bgPos = bgPos + gameSpeed;
+			ctx.drawImage(background, cWidth - bgPos, 0, bgPos, iH, 0, 0, bgPos, iH);
+			ctx.drawImage(background, bgPos, 0, iW, iH);
+			//ctx.drawImage(background,cWidth+bgPos, 0,iW, iH);
+			//ctx.drawImage(background, 0, 0, iW, iH);
+
+			var catHeight = iH - catDims[1];
+			if (isJumping) {
+				if (jumpStage == maxJump) {
+					isJumping = false;
+					jumpStage = 0;
+				} else if (jumpStage < maxJump / 2) {
+					jumpStage += jumpSpeed;
+					catHeight -= jumpStage;
+				} else {
+					jumpStage += jumpSpeed;
+					catHeight -= (maxJump / 2); // Going up
+					catHeight += jumpStage - (maxJump / 2); // Going down
+				}
+			}
+
+			ctx.drawImage(cat, cWidth - catDims[0], catHeight, catDims[0], catDims[1]);
+
+			var highscore = localStorage.getItem("highscore");
+
+			if (highscore !== null) {
+				if (score > highscore) {
+					localStorage.setItem("highscore", score);
+				}
+			}
+			else {
+				localStorage.setItem("highscore", score);
+			}
+			ballPos += gameSpeed;
+			if (ballPos > 648 && !isJumping) {
+				console.log(score)				
+				location.reload()
+			}
+			if (ballPos >= cWidth) {
+				score += 1;
+				ballPos = 0;
+			}
+			ctx.drawImage(ball, ballPos, iH - ballDims[1], ballDims[0], ballDims[1]);
+			ctx.fillText("Current score : " + score, 100, 100);
+			ctx.fillText("High score : " + highscore, 500, 100);
+
+
+			requestAnimationFrame(drawFrame);
+			if (ballPos > cWidth) {
+				console.log("carpısma")
+			}
+			// console.log(ballPos)
+		}
+
+		function jump() {
+			if (!isJumping) {
+				isJumping = true;
+			}
+		}
+
+		document.addEventListener("keydown", jumpEvent);
+
+		function jumpEvent(event) {
+			if (event.key == "ArrowUp") {
+				jump();
+			}
+		}
+	</script>
+
+</body>
+
+</html>
