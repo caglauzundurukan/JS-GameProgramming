@@ -17,5 +17,9 @@
     - It will reset if you refresh the page, but not if you hit the ball.
  - **Author**:
     - Çağla Uzundurukan   -19360859041-
-  
+ - **Some pictures about the game**:
+
+
+![game area](https://i.ibb.co/qsj6Dnq/Ekran-g-r-nt-s-2022-05-15-215235.png) 
+![sweet cat](https://i.ibb.co/5xtvFRK/cat-2.png)
 
