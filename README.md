@@ -11,6 +11,10 @@
     - Press the up arrow key on your keyboard and avoid the ball. <br>
     - If you cannot jump over the ball, you will lose the game.
     - If you lose the game, your score will be reset and you will have to start over. 
+    - Current score: Shows the score you have made at the moment.
+    - If you refresh the page or hit the ball, your current score will be reset.
+    - High score: Highest score you have ever made. 
+    - It will reset if you refresh the page, but not if you hit the ball.
  - **Author**:
     - Çağla Uzundurukan   -19360859041-
   
